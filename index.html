@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>باحث عقار</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7f7;
+      color: #172020;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      color: #087f72;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #687574;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 5px 25px rgba(0,0,0,.06);
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 15px;
+      font-size: 16px;
+      border: 1px solid #ccd7d5;
+      border-radius: 12px;
+      resize: vertical;
+      margin: 15px 0;
+    }
+
+    button {
+      background: #087f72;
+      color: white;
+      border: 0;
+      padding: 13px 22px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: .9;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .item {
+      background: #f3f7f6;
+      padding: 14px;
+      border-radius: 10px;
+    }
+
+    .item strong {
+      display: block;
+      color: #087f72;
+      margin-bottom: 5px;
+    }
+
+    .notice {
+      font-size: 13px;
+      color: #777;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>باحث عقار</h1>
+
+  <div class="subtitle">
+    اكتب احتياج العميل وسنحوّله إلى بحث عقاري مرتب.
+  </div>
+
+  <div class="card">
+
+    <strong>وش يدور العميل؟</strong>
+
+    <textarea id="query"
+      placeholder="مثال: أبغى شقة تمليك في جدة، الشاطئ أو الزهراء، 3 غرف، أقل من 1,000,000 ريال ومساحتها فوق 120 متر"></textarea>
+
+    <button onclick="analyze()">
+      تحليل الطلب
+    </button>
+
+  </div>
+
+  <div class="card result" id="result">
+
+    <h2>متطلبات العميل</h2>
+
+    <div class="grid">
+
+      <div class="item">
+        <strong>نوع العقار</strong>
+        <span id="type">-</span>
+      </div>
+
+      <div class="item">
+        <strong>الغرض</strong>
+        <span id="purpose">-</span>
+      </div>
+
+      <div class="item">
+        <strong>المدينة</strong>
+        <span id="city">-</span>
+      </div>
+
+      <div class="item">
+        <strong>الأحياء</strong>
+        <span id="districts">-</span>
+      </div>
+
+      <div class="item">
+        <strong>عدد الغرف</strong>
+        <span id="rooms">-</span>
+      </div>
+
+      <div class="item">
+        <strong>الميزانية</strong>
+        <span id="price">-</span>
+      </div>
+
+    </div>
+
+    <br>
+
+    <button onclick="openAqar()">
+      البحث في عقار
+    </button>
+
+    <div class="notice">
+      النسخة الحالية لا تنسخ إعلانات عقار. الربط المباشر بالنتائج سيتم عند توفر مصدر بيانات مصرح به.
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function analyze() {
+
+  const text = document.getElementById("query").value;
+
+  let type = "غير محدد";
+
+  const types = [
+    "شقة",
+    "فيلا",
+    "أرض",
+    "ارض",
+    "دور",
+    "عمارة",
+    "دوبلكس",
+    "تاون هاوس"
+  ];
+
+  types.forEach(t => {
+    if(text.includes(t)) type = t;
+  });
+
+  let purpose = "غير محدد";
+
+  if(
+    text.includes("تمليك") ||
+    text.includes("شراء") ||
+    text.includes("تملك")
+  ){
+    purpose = "شراء";
+  }
+
+  if(
+    text.includes("إيجار") ||
+    text.includes("ايجار")
+  ){
+    purpose = "إيجار";
+  }
+
+  let city = "غير محدد";
+
+  if(text.includes("جدة")) city = "جدة";
+  if(text.includes("الرياض")) city = "الرياض";
+  if(text.includes("مكة")) city = "مكة";
+  if(text.includes("المدينة")) city = "المدينة";
+
+  const districtsList = [
+    "الشاطئ",
+    "الزهراء",
+    "النهضة",
+    "السلامة",
+    "المحمدية",
+    "الروضة",
+    "النعيم",
+    "الحمراء",
+    "النزهة",
+    "أبحر",
+    "ابحر",
+    "المرجان",
+    "البساتين",
+    "الصفا",
+    "الفيحاء"
+  ];
+
+  let districts = [];
+
+  districtsList.forEach(d => {
+    if(text.includes(d)) districts.push(d);
+  });
+
+  const roomMatch =
+    text.match(/(\d+)\s*(غرف|غرفة)/);
+
+  const priceMatch =
+    text.match(/([\d,]+)\s*(ريال|ر\.س|SAR)/i);
+
+  document.getElementById("type").innerText = type;
+  document.getElementById("purpose").innerText = purpose;
+  document.getElementById("city").innerText = city;
+
+  document.getElementById("districts").innerText =
+    districts.length ? districts.join("، ") : "غير محدد";
+
+  document.getElementById("rooms").innerText =
+    roomMatch ? roomMatch[1] : "غير محدد";
+
+  document.getElementById("price").innerText =
+    priceMatch ? priceMatch[1] + " SAR" : "غير محدد";
+
+  document.getElementById("result").style.display = "block";
+}
+
+function openAqar() {
+  window.open("https://sa.aqar.fm/", "_blank");
+}
+
+</script>
+
+</body>
+</html>
