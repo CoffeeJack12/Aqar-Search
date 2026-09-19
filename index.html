@@ -2,786 +2,1505 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>المستشار العقاري الذكي</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>باحث عقار | المستشار العقاري</title>
+
 <style>
+:root{
+  --green:#176b5b;
+  --green2:#0f584b;
+  --light:#eef7f4;
+  --bg:#f4f7f6;
+  --text:#17211f;
+  --muted:#73807d;
+  --border:#dce7e3;
+  --white:#fff;
+  --danger:#a83e3e;
+}
+
 *{box-sizing:border-box}
-body{margin:0;background:#f3f7f6;font-family:Arial,sans-serif;color:#172220}
-.app{max-width:900px;margin:auto;padding:25px 15px 130px}
-h1{color:#087f72;margin-bottom:5px}
-.sub{color:#667;margin-bottom:20px}
-.chat,.panel{background:#fff;border-radius:20px;padding:18px;margin-bottom:15px;box-shadow:0 7px 25px #0000000d}
-.chat{min-height:390px}
-.msg{display:flex;margin:12px 0}
-.user{justify-content:flex-start}
-.bubble{max-width:82%;padding:13px 16px;border-radius:16px;line-height:1.7;white-space:pre-line}
-.agent .bubble{background:#edf6f4}
-.user .bubble{background:#168c7d;color:#fff}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px}
-.card{background:#f3f8f7;border-radius:11px;padding:11px}
-.card b{display:block;color:#168c7d;font-size:12px;margin-bottom:5px}
-.inputbar{position:fixed;bottom:0;left:0;right:0;background:#f3f7f6f5;border-top:1px solid #ddd;padding:11px}
-.wrap{max-width:900px;margin:auto;display:flex;gap:8px}
-input{flex:1;padding:15px;border:1px solid #ccd8d5;border-radius:14px;font-size:16px}
-button{border:0;background:#168c7d;color:#fff;padding:12px 18px;border-radius:13px;cursor:pointer}
-.secondary{background:white;color:#168c7d;border:1px solid #168c7d;margin-top:12px}
-.search{width:100%;margin-top:12px;display:none}
-.confidence{font-size:12px;color:#667;margin-top:12px}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
+}
+
+.app{
+  width:min(100%,1000px);
+  margin:auto;
+  padding:22px 14px 120px;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.brand h1{
+  margin:0;
+  color:var(--green);
+  font-size:27px;
+}
+
+.brand p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.badge{
+  background:#e4f3ee;
+  color:var(--green);
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.chat{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:22px;
+  min-height:430px;
+  max-height:58vh;
+  overflow-y:auto;
+  padding:18px;
+  box-shadow:0 8px 30px rgba(0,0,0,.04);
+}
+
+.row{
+  display:flex;
+  margin:11px 0;
+}
+
+.row.agent{justify-content:flex-end}
+.row.user{justify-content:flex-start}
+
+.bubble{
+  max-width:82%;
+  padding:12px 15px;
+  border-radius:17px;
+  line-height:1.75;
+  white-space:pre-line;
+  word-break:break-word;
+}
+
+.agent .bubble{
+  background:var(--light);
+  border-bottom-right-radius:5px;
+}
+
+.user .bubble{
+  background:var(--green);
+  color:#fff;
+  border-bottom-left-radius:5px;
+}
+
+.summary{
+  margin-top:14px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:16px;
+}
+
+.summaryTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:13px;
+}
+
+.summaryTop h3{
+  margin:0;
+  font-size:17px;
+}
+
+.completeness{
+  color:var(--green);
+  font-size:12px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+
+.card{
+  background:#f6f9f8;
+  border-radius:12px;
+  padding:11px;
+  min-height:64px;
+}
+
+.card b{
+  display:block;
+  color:var(--green);
+  font-size:11px;
+  margin-bottom:6px;
+}
+
+.card span{
+  font-size:13px;
+  line-height:1.5;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+button{
+  border:0;
+  border-radius:12px;
+  padding:12px 16px;
+  font-size:14px;
+  cursor:pointer;
+  font-family:inherit;
+}
+
+.primary{
+  background:var(--green);
+  color:white;
+}
+
+.primary:hover{background:var(--green2)}
+
+.secondary{
+  background:white;
+  color:var(--green);
+  border:1px solid var(--green);
+}
+
+.searchBtn{
+  flex:1;
+  display:none;
+}
+
+.dev{
+  margin-top:12px;
+  display:none;
+  padding:12px;
+  border-radius:12px;
+  background:#151918;
+  color:#d7efe7;
+  direction:ltr;
+  text-align:left;
+  white-space:pre-wrap;
+  font-family:monospace;
+  font-size:11px;
+  overflow:auto;
+}
+
+.inputBar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:rgba(244,247,246,.96);
+  backdrop-filter:blur(10px);
+  border-top:1px solid var(--border);
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+
+.inputWrap{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  gap:8px;
+}
+
+#input{
+  flex:1;
+  min-width:0;
+  border:1px solid #cbd9d5;
+  background:#fff;
+  border-radius:14px;
+  padding:14px 15px;
+  font-size:16px;
+  outline:none;
+  font-family:inherit;
+}
+
+#input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(23,107,91,.08);
+}
+
+.send{
+  min-width:76px;
+  background:var(--green);
+  color:#fff;
+}
+
+@media(max-width:700px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .bubble{max-width:90%}
+  .brand h1{font-size:23px}
+  .badge{display:none}
+}
+
+@media(max-width:380px){
+  .grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
-<h1>المستشار العقاري الذكي</h1>
-<div class="sub">تكلم بطريقتك. ما يحتاج ترتب طلبك.</div>
+  <div class="header">
+    <div class="brand">
+      <h1>المستشار العقاري</h1>
+      <p>قل لي وش تدور عليه بطريقتك.</p>
+    </div>
+    <div class="badge">ذاكرة + تعلّم</div>
+  </div>
 
-<div id="chat" class="chat"></div>
+  <div id="chat" class="chat"></div>
 
-<div class="panel">
-<h3>فهمت من العميل</h3>
+  <div class="summary">
 
-<div class="grid">
-<div class="card"><b>العملية</b><span id="purpose">—</span></div>
-<div class="card"><b>العقار</b><span id="type">—</span></div>
-<div class="card"><b>المدينة</b><span id="city">—</span></div>
-<div class="card"><b>الموقع</b><span id="location">—</span></div>
-<div class="card"><b>الغرف</b><span id="rooms">—</span></div>
-<div class="card"><b>الميزانية</b><span id="budget">—</span></div>
-<div class="card"><b>المساحة</b><span id="area">—</span></div>
-<div class="card"><b>المميزات</b><span id="features">—</span></div>
+    <div class="summaryTop">
+      <h3>متطلبات العميل</h3>
+      <div id="completion" class="completeness">0% مكتمل</div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><b>العملية</b><span id="vPurpose">—</span></div>
+      <div class="card"><b>نوع العقار</b><span id="vType">—</span></div>
+      <div class="card"><b>المدينة</b><span id="vCity">—</span></div>
+      <div class="card"><b>الأحياء</b><span id="vDistricts">—</span></div>
+
+      <div class="card"><b>الغرف</b><span id="vRooms">—</span></div>
+      <div class="card"><b>الميزانية</b><span id="vBudget">—</span></div>
+      <div class="card"><b>المساحة</b><span id="vArea">—</span></div>
+      <div class="card"><b>شروط إضافية</b><span id="vFeatures">—</span></div>
+    </div>
+
+    <div class="actions">
+      <button id="searchBtn" class="primary searchBtn" onclick="prepareSearch()">
+        ابدأ البحث
+      </button>
+
+      <button class="secondary" onclick="newSearch()">
+        بحث جديد
+      </button>
+
+      <button class="secondary" onclick="toggleDev()">
+        تشخيص
+      </button>
+    </div>
+
+    <div id="dev" class="dev"></div>
+  </div>
 </div>
 
-<div id="confidence" class="confidence"></div>
-
-<button id="search" class="search" onclick="readySearch()">
-ابدأ البحث العقاري
-</button>
-
-<button class="secondary" onclick="resetConversation()">
-بحث جديد
-</button>
-</div>
-</div>
-
-<div class="inputbar">
-<div class="wrap">
-<input id="input" placeholder="مثال: أبي روف في النهضة حول ٨٠٠...">
-<button onclick="send()">إرسال</button>
-</div>
+<div class="inputBar">
+  <div class="inputWrap">
+    <input
+      id="input"
+      autocomplete="off"
+      placeholder="اكتب طلبك... مثال: أبغا شقة ٣ غرف في النعيم في جدة"
+    >
+    <button class="send" onclick="sendMessage()">إرسال</button>
+  </div>
 </div>
 
 <script>
 
-/* ================================
-   STORAGE / LEARNING
-================================ */
+/* =====================================================
+   REAL ESTATE CONVERSATIONAL MINI AGENT
+   No external AI / No API
+===================================================== */
 
-const LEARN_KEY="realEstateAgentLearningV1";
+const LEARNING_KEY = "aqar_agent_learning_v3";
+const SESSION_KEY  = "aqar_agent_session_v3";
 
-let learned=JSON.parse(localStorage.getItem(LEARN_KEY)||"{}");
+let learned = safeJSON(localStorage.getItem(LEARNING_KEY), {aliases:{}});
 
-function saveLearning(){
- localStorage.setItem(LEARN_KEY,JSON.stringify(learned));
+function emptyState(){
+  return {
+    purpose:null,
+    type:null,
+    city:null,
+
+    districts:[],
+    excludedDistricts:[],
+
+    rooms:null,
+    roomsMode:null,
+
+    bathrooms:null,
+
+    budgetMin:null,
+    budgetMax:null,
+    budgetApprox:null,
+    budgetFlexible:false,
+
+    areaMin:null,
+    areaMax:null,
+
+    features:[],
+    notes:[],
+
+    locationFlexible:false,
+    roomsFlexible:false,
+
+    awaiting:null,
+
+    lastUserMessage:"",
+    lastIntent:"",
+    confidence:0
+  };
 }
 
-function learn(alias,value){
- alias=norm(alias);
- value=norm(value);
+let state = safeJSON(localStorage.getItem(SESSION_KEY), emptyState());
 
- if(!alias || !value || alias===value) return;
+/* ===================== UTILITIES ===================== */
 
- learned[alias]=value;
- saveLearning();
+function safeJSON(value,fallback){
+  try{
+    const parsed=JSON.parse(value);
+    return parsed || fallback;
+  }catch(e){
+    return fallback;
+  }
+}
+
+function save(){
+  localStorage.setItem(SESSION_KEY,JSON.stringify(state));
+  localStorage.setItem(LEARNING_KEY,JSON.stringify(learned));
+}
+
+function uniquePush(arr,value){
+  if(value && !arr.includes(value)) arr.push(value);
+}
+
+function removeValue(arr,value){
+  return arr.filter(x=>x!==value);
+}
+
+function normalizeArabic(text){
+
+  const digits={
+    "٠":"0","١":"1","٢":"2","٣":"3","٤":"4",
+    "٥":"5","٦":"6","٧":"7","٨":"8","٩":"9",
+    "۰":"0","۱":"1","۲":"2","۳":"3","۴":"4",
+    "۵":"5","۶":"6","۷":"7","۸":"8","۹":"9"
+  };
+
+  return String(text||"")
+    .toLowerCase()
+    .replace(/[٠-٩۰-۹]/g,c=>digits[c]||c)
+    .replace(/[إأآ]/g,"ا")
+    .replace(/ى/g,"ي")
+    .replace(/ة/g,"ه")
+    .replace(/[ًٌٍَُِّْـ]/g,"")
+    .replace(/[،,؛;]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function has(text,phrases){
+  return phrases.some(p=>text.includes(normalizeArabic(p)));
+}
+
+function escapeRegExp(str){
+  return str.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 }
 
 function applyLearning(text){
- const keys=Object.keys(learned).sort((a,b)=>b.length-a.length);
 
- keys.forEach(k=>{
-   if(text.includes(k)){
-     text=text.split(k).join(learned[k]);
-   }
- });
+  let result=text;
 
- return text;
+  const aliases=Object.keys(learned.aliases||{})
+    .sort((a,b)=>b.length-a.length);
+
+  aliases.forEach(alias=>{
+    const target=learned.aliases[alias];
+    result=result.replace(
+      new RegExp(escapeRegExp(alias),"g"),
+      target
+    );
+  });
+
+  return result;
 }
 
+/* ===================== NUMBER WORDS ===================== */
 
-/* ================================
-   MEMORY
-================================ */
+const NUMBER_WORDS = [
+  ["عشره",10],
+  ["تسعه",9],["تسع",9],
+  ["ثمانيه",8],["ثمان",8],
+  ["سبعه",7],["سبع",7],
+  ["سته",6],["ست",6],
+  ["خمسه",5],["خمس",5],
+  ["اربعه",4],["اربع",4],
+  ["ثلاثه",3],["ثلاث",3],
+  ["اثنين",2],["اثنتين",2],["اتنين",2],["ثنتين",2],["ثنين",2],
+  ["واحده",1],["واحد",1]
+];
 
-function blank(){
- return{
-  purpose:null,
-  type:null,
-  city:null,
-  locations:[],
-  excluded:[],
-  rooms:null,
-  roomsMode:null,
-  budgetMin:null,
-  budgetMax:null,
-  budgetApprox:null,
-  areaMin:null,
-  areaMax:null,
-  features:[],
-  notes:[],
-  awaiting:null,
-  confidence:0
- };
+function wordNumber(text){
+
+  for(const [word,num] of NUMBER_WORDS){
+    if(text.includes(word)) return num;
+  }
+
+  return null;
 }
 
-let M=blank();
+/* ===================== KNOWLEDGE ===================== */
 
-
-/* ================================
-   NORMALIZATION
-================================ */
-
-function norm(t){
-
- const numbers={
-  "٠":"0","١":"1","٢":"2","٣":"3","٤":"4",
-  "٥":"5","٦":"6","٧":"7","٨":"8","٩":"9",
-  "۰":"0","۱":"1","۲":"2","۳":"3","۴":"4",
-  "۵":"5","۶":"6","۷":"7","۸":"8","۹":"9"
- };
-
- t=String(t).toLowerCase();
-
- t=t.replace(/[٠-٩۰-۹]/g,x=>numbers[x]||x);
-
- return t
- .replace(/[إأآ]/g,"ا")
- .replace(/ة/g,"ه")
- .replace(/ى/g,"ي")
- .replace(/[ًٌٍَُِّْـ]/g,"")
- .replace(/[,،]/g," ")
- .replace(/\s+/g," ")
- .trim();
-}
-
-function any(t,list){
- return list.some(x=>t.includes(norm(x)));
-}
-
-function unique(arr,v){
- if(v&&!arr.includes(v))arr.push(v);
-}
-
-
-/* ================================
-   DICTIONARIES
-================================ */
-
-const TYPES=[
- [["شقه","شقق","apartment","flat"],"شقة"],
- [["فيلا","فله","فلل","villa"],"فيلا"],
- [["دوبلكس","دبلكس","دوبليكس","duplex"],"دوبلكس"],
- [["تاون هاوس","تاونهاوس","townhouse"],"تاون هاوس"],
- [["ارض","اراضي","land"],"أرض"],
- [["عماره","عمائر","building"],"عمارة"],
- [["دور","floor"],"دور"],
- [["استراحه","شاليه"],"استراحة"]
+const PROPERTY_TYPES=[
+  {
+    value:"دوبلكس",
+    words:["دوبلكس","دبلكس","دوبليكس","دوبليكس","duplex"]
+  },
+  {
+    value:"تاون هاوس",
+    words:["تاون هاوس","تاونهاوس","town house","townhouse"]
+  },
+  {
+    value:"بنتهاوس",
+    words:["بنتهاوس","بنت هاوس","penthouse"]
+  },
+  {
+    value:"استراحة",
+    words:["استراحه","شاليه","chalet"]
+  },
+  {
+    value:"عمارة",
+    words:["عماره","عمائر","building"]
+  },
+  {
+    value:"أرض",
+    words:["ارض","اراضي","قطعه ارض","land"]
+  },
+  {
+    value:"فيلا",
+    words:["فيلا","فله","فلل","villa"]
+  },
+  {
+    value:"شقة",
+    words:["شقه","شقق","apartment","flat"]
+  }
 ];
 
 const CITIES=[
- [["جده","جدة","jeddah"],"جدة"],
- [["الرياض","riyadh"],"الرياض"],
- [["مكه","مكة","makkah"],"مكة"],
- [["المدينه","المدينة","madinah"],"المدينة المنورة"],
- [["الدمام","dammam"],"الدمام"],
- [["الخبر","khobar"],"الخبر"],
- [["الطايف","الطائف","taif"],"الطائف"],
- [["تبوك"],"تبوك"],
- [["ابها"],"أبها"]
+  {value:"جدة",words:["جده","جدة","jeddah"]},
+  {value:"الرياض",words:["الرياض","رياض","riyadh"]},
+  {value:"مكة",words:["مكه","مكة","makkah","mecca"]},
+  {value:"المدينة المنورة",words:["المدينه المنوره","المدينه","madinah","medina"]},
+  {value:"الخبر",words:["الخبر","khobar"]},
+  {value:"الدمام",words:["الدمام","dammam"]},
+  {value:"الطائف",words:["الطايف","الطائف","taif"]},
+  {value:"تبوك",words:["تبوك","tabuk"]},
+  {value:"أبها",words:["ابها","abha"]},
+  {value:"خميس مشيط",words:["خميس مشيط"]},
+  {value:"ينبع",words:["ينبع"]},
+  {value:"الجبيل",words:["الجبيل"]},
+  {value:"القصيم",words:["القصيم"]},
+  {value:"بريدة",words:["بريده","بريدة"]}
 ];
 
-const AREAS=[
- ["الشاطئ","الشاطئ"],["النهضه","النهضة"],
- ["الزهراء","الزهراء"],["السلامه","السلامة"],
- ["المحمديه","المحمدية"],["الروضه","الروضة"],
- ["النعيم","النعيم"],["الحمراء","الحمراء"],
- ["النزهه","النزهة"],["المرجان","المرجان"],
- ["البساتين","البساتين"],["الصفا","الصفا"],
- ["الفيحاء","الفيحاء"],["الربوه","الربوة"],
- ["السامر","السامر"],["الريان","الريان"],
- ["المنار","المنار"],["الواحه","الواحة"],
- ["الرحاب","الرحاب"],["البوادي","البوادي"],
- ["النسيم","النسيم"],["الاندلس","الأندلس"]
+const DISTRICTS=[
+  ["الشاطئ","الشاطئ"],
+  ["النعيم","النعيم"],
+  ["النهضه","النهضة"],
+  ["الزهراء","الزهراء"],
+  ["السلامه","السلامة"],
+  ["المحمديه","المحمدية"],
+  ["الروضه","الروضة"],
+  ["الحمراء","الحمراء"],
+  ["النزهه","النزهة"],
+  ["المرجان","المرجان"],
+  ["البساتين","البساتين"],
+  ["الصفا","الصفا"],
+  ["الفيحاء","الفيحاء"],
+  ["الربوه","الربوة"],
+  ["السامر","السامر"],
+  ["الريان","الريان"],
+  ["المنار","المنار"],
+  ["الواحه","الواحة"],
+  ["الرحاب","الرحاب"],
+  ["البوادي","البوادي"],
+  ["النسيم","النسيم"],
+  ["الاندلس","الأندلس"],
+  ["مشرفه","مشرفة"],
+  ["الرويس","الرويس"],
+  ["الورود","الورود"],
+  ["الاجواد","الأجواد"],
+  ["الصفوه","الصفوة"],
+  ["ابحر الشماليه","أبحر الشمالية"],
+  ["ابحر الجنوبيه","أبحر الجنوبية"],
+  ["ابحر","أبحر"],
+  ["البغداديه","البغدادية"],
+  ["الجامعه","الجامعة"],
+  ["البلد","البلد"],
+  ["السنابل","السنابل"],
+  ["الامير فواز","الأمير فواز"]
 ];
 
-
-/* ================================
-   MONEY
-================================ */
-
-function money(n,unit=""){
-
- n=parseFloat(n);
-
- unit=norm(unit);
-
- if(unit.includes("مليون")) return n*1000000;
- if(unit.includes("الف")||unit==="k") return n*1000;
-
- // العقار: 500 غالباً تعني 500 ألف في سياق الميزانية
- if(n>=100 && n<10000) return n*1000;
-
- return n;
-}
-
-function formatMoney(n){
- return new Intl.NumberFormat("en-US").format(Math.round(n))+" ريال";
-}
-
-
-/* ================================
-   CORRECTION + LEARNING
-================================ */
+/* ===================== LEARNING ===================== */
 
 function detectTeaching(raw){
 
- const t=norm(raw);
+  const text=normalizeArabic(raw);
 
- const patterns=[
-  /(.+?)\s+(?:يعني|معناها|اقصد فيها|اقصد به)\s+(.+)/,
-  /(?:لما اقول|اذا قلت)\s+(.+?)\s+(?:اقصد|يعني)\s+(.+)/,
-  /(.+?)\s*=\s*(.+)/
- ];
+  const patterns=[
+    /^(.{1,35}?)\s+(?:يعني|معناها|معناه)\s+(.{1,50})$/,
+    /^(?:لما اقول|اذا قلت)\s+(.{1,35}?)\s+(?:اقصد|يعني)\s+(.{1,50})$/,
+    /^(.{1,35}?)\s*=\s*(.{1,50})$/
+  ];
 
- for(const p of patterns){
+  for(const regex of patterns){
 
-   const m=t.match(p);
+    const match=text.match(regex);
 
-   if(m){
-     const alias=m[1].trim();
-     const meaning=m[2].trim();
+    if(match){
 
-     if(alias.length<40 && meaning.length<60){
-       learn(alias,meaning);
+      const alias=match[1].trim();
+      const meaning=match[2].trim();
 
-       return {
-        learned:true,
-        alias,
-        meaning
-       };
-     }
-   }
- }
+      if(alias && meaning && alias!==meaning){
 
- return {learned:false};
+        learned.aliases=learned.aliases||{};
+        learned.aliases[alias]=meaning;
+
+        save();
+
+        return {alias,meaning};
+      }
+    }
+  }
+
+  return null;
 }
 
+/* ===================== CONTEXTUAL FOLLOW UPS ===================== */
 
-/* ================================
-   UNDERSTANDING
-================================ */
+function parseAwaiting(raw){
+
+  let text=applyLearning(normalizeArabic(raw));
+
+  if(!state.awaiting) return;
+
+  if(state.awaiting==="purpose"){
+
+    if(has(text,[
+      "تمليك","شراء","اشتري","للبيع","ملك","تملك","buy"
+    ])){
+      state.purpose="شراء";
+    }
+
+    if(has(text,[
+      "ايجار","اجار","استئجار","للايجار","rent"
+    ])){
+      state.purpose="إيجار";
+    }
+  }
+
+  if(state.awaiting==="city"){
+
+    for(const city of CITIES){
+      if(has(text,city.words)){
+        state.city=city.value;
+        break;
+      }
+    }
+  }
+
+  if(state.awaiting==="type"){
+
+    for(const item of PROPERTY_TYPES){
+      if(has(text,item.words)){
+        state.type=item.value;
+        break;
+      }
+    }
+
+    if(has(text,["روف","سطح خاص"])){
+      state.type="شقة";
+      uniquePush(state.features,"روف");
+    }
+
+    if(
+      has(text,["دور"]) &&
+      !has(text,["دور عالي","دور مرتفع","دور ارضي","دور واطي"])
+    ){
+      state.type="دور";
+    }
+  }
+
+  if(state.awaiting==="rooms"){
+
+    if(has(text,["ما يفرق","مايفرق","اي عدد","مو مهم","مش مهم"])){
+      state.roomsFlexible=true;
+    }else{
+
+      const digit=text.match(/\d+/);
+      const n=digit ? Number(digit[0]) : wordNumber(text);
+
+      if(n && n<=20){
+        state.rooms=n;
+
+        state.roomsMode=
+          has(text,["على الاقل","اقل شي","او اكثر","فاكثر","فوق"])
+          ? "min"
+          : "exact";
+      }
+    }
+  }
+
+  if(state.awaiting==="budget"){
+
+    if(has(text,[
+      "ما يفرق","مايفرق","مفتوحه","مفتوح","بدون حد",
+      "مو مهم","مش مهم"
+    ])){
+      state.budgetFlexible=true;
+    }else{
+      parseBudget(text,true);
+    }
+  }
+
+  if(state.awaiting==="district"){
+
+    if(has(text,[
+      "ما يفرق","مايفرق","اي حي","اي منطقه",
+      "اي مكان","مو مهم","مش مهم"
+    ])){
+      state.locationFlexible=true;
+    }
+  }
+}
+
+/* ===================== BUDGET ===================== */
+
+function toMoney(number,unit){
+
+  let n=Number(number);
+  const u=normalizeArabic(unit||"");
+
+  if(u.includes("مليون")) return n*1000000;
+  if(u.includes("الف") || u==="k") return n*1000;
+
+  if(n>=100 && n<10000) return n*1000;
+
+  return n;
+}
+
+function parseBudget(text,contextual=false){
+
+  if(has(text,["مليون ونص","مليون و نص","مليون ونصف"])){
+    state.budgetApprox=1500000;
+    state.budgetMin=null;
+    state.budgetMax=null;
+    state.budgetFlexible=false;
+    return true;
+  }
+
+  if(has(text,["نص مليون","نصف مليون"])){
+    state.budgetApprox=500000;
+    state.budgetMin=null;
+    state.budgetMax=null;
+    state.budgetFlexible=false;
+    return true;
+  }
+
+  let millionPlus=text.match(
+    /مليون\s*(?:و)?\s*(\d{2,3})\s*(?:الف)?/
+  );
+
+  if(millionPlus){
+    state.budgetApprox=
+      1000000+(Number(millionPlus[1])*1000);
+
+    state.budgetMin=null;
+    state.budgetMax=null;
+    state.budgetFlexible=false;
+    return true;
+  }
+
+  let range=text.match(
+    /(?:من\s*)?(\d+(?:\.\d+)?)\s*(الف|مليون|k)?\s*(?:الى|الي|-)\s*(\d+(?:\.\d+)?)\s*(الف|مليون|k)?/
+  );
+
+  if(range){
+
+    const u1=range[2]||range[4]||"";
+    const u2=range[4]||range[2]||"";
+
+    state.budgetMin=toMoney(range[1],u1);
+    state.budgetMax=toMoney(range[3],u2);
+    state.budgetApprox=null;
+    state.budgetFlexible=false;
+
+    return true;
+  }
+
+  let maximum=text.match(
+    /(?:ما\s*(?:ابي|ابغا|ابغى|عايز|بدي)?\s*(?:اتعدى|اتجاوز)|حدي|حد اقصى|اقصى ميزانيه|حتى|لحد|ما فوق)\s*(\d+(?:\.\d+)?)\s*(الف|مليون|k)?/
+  );
+
+  if(maximum){
+
+    state.budgetMax=toMoney(maximum[1],maximum[2]);
+    state.budgetApprox=null;
+    state.budgetMin=null;
+    state.budgetFlexible=false;
+
+    return true;
+  }
+
+  let minimum=text.match(
+    /(?:من|فوق|اكثر من)\s*(\d+(?:\.\d+)?)\s*(الف|مليون|k)\s*(?:ريال)?/
+  );
+
+  if(minimum && has(text,["ميزاني","سعر","ريال","مليون","الف"])){
+
+    state.budgetMin=toMoney(minimum[1],minimum[2]);
+    state.budgetApprox=null;
+    state.budgetFlexible=false;
+
+    return true;
+  }
+
+  let approximate=text.match(
+    /(?:حول|حوالي|حدود|بحدود|تقريبا|تقريباً|ميزانيتي|ميزانيه|ميزانية|السعر)\s*(\d+(?:\.\d+)?)\s*(الف|مليون|k)?/
+  );
+
+  if(approximate){
+
+    state.budgetApprox=
+      toMoney(approximate[1],approximate[2]);
+
+    state.budgetMin=null;
+    state.budgetMax=null;
+    state.budgetFlexible=false;
+
+    return true;
+  }
+
+  let explicit=text.match(
+    /(\d+(?:\.\d+)?)\s*(الف|مليون|k)\s*(?:ريال)?/
+  );
+
+  if(explicit && !has(text,["متر","م2","م²"])){
+
+    state.budgetApprox=toMoney(explicit[1],explicit[2]);
+    state.budgetFlexible=false;
+
+    return true;
+  }
+
+  if(contextual){
+
+    const plain=text.match(/^(\d+(?:\.\d+)?)$/);
+
+    if(plain){
+
+      state.budgetApprox=toMoney(plain[1],"");
+      state.budgetMin=null;
+      state.budgetMax=null;
+      state.budgetFlexible=false;
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/* ===================== GENERAL UNDERSTANDING ===================== */
 
 function understand(raw){
 
- let t=norm(raw);
- t=applyLearning(t);
+  let text=applyLearning(normalizeArabic(raw));
 
+  state.lastUserMessage=raw;
 
- /* PURPOSE */
+  /* transaction */
 
- if(any(t,[
-  "شراء","للبيع","تمليك","تملك","اشتري",
-  "ابي اشتري","ابغا اشتري","عايز اشتري",
-  "buy","purchase"
- ])) M.purpose="شراء";
+  if(has(text,[
+    "تمليك","شراء","اشتري","ابغا اشتري","ابي اشتري",
+    "عايز اشتري","للبيع","تملك","buy","purchase"
+  ])){
+    state.purpose="شراء";
+  }
 
- if(any(t,[
-  "ايجار","للايجار","استئجار","استاجر",
-  "اجار","كراء","rent"
- ])) M.purpose="إيجار";
+  if(has(text,[
+    "ايجار","اجار","للايجار","استئجار","استاجر",
+    "عايز اجر","rent"
+  ])){
+    state.purpose="إيجار";
+  }
 
+  /* property type */
 
- /* TYPE */
+  for(const item of PROPERTY_TYPES){
+    if(has(text,item.words)){
+      state.type=item.value;
+      break;
+    }
+  }
 
- TYPES.forEach(([words,value])=>{
-   if(any(t,words)) M.type=value;
- });
+  if(has(text,["روف","رووف","سطح خاص"])){
 
+    uniquePush(state.features,"روف");
 
- /* ROOF */
+    if(!state.type || state.type==="شقة"){
+      state.type="شقة";
+    }
+  }
 
- if(any(t,[
-  "روف","رووف","سطح خاص","بنتهاوس",
-  "بنت هاوس","penthouse"
- ])){
-   unique(M.features,"روف");
-   if(!M.type)M.type="شقة";
- }
+  /*
+    كلمة "دور" لا تعتبر نوع عقار إذا كانت جزءًا من
+    "دور عالي / أرضي / واطي"
+  */
 
+  if(
+    has(text,["دور"]) &&
+    !has(text,[
+      "دور عالي","دور مرتفع","دور واطي",
+      "دور ارضي","الدور العالي","الدور الارضي"
+    ]) &&
+    !state.type
+  ){
+    state.type="دور";
+  }
 
- /* CITIES */
+  /* city */
 
- CITIES.forEach(([words,value])=>{
-   if(any(t,words))M.city=value;
- });
+  for(const city of CITIES){
+    if(has(text,city.words)){
+      state.city=city.value;
+      break;
+    }
+  }
 
+  /* districts + exclusions */
 
- /* AREAS */
+  for(const [rawDistrict,display] of DISTRICTS){
 
- AREAS.forEach(([key,value])=>{
+    const district=normalizeArabic(rawDistrict);
 
-   if(t.includes(norm(key))){
+    if(!text.includes(district)) continue;
 
-     const k=norm(key);
+    const negatives=[
+      "مو "+district,
+      "مش "+district,
+      "غير "+district,
+      "ما ابي "+district,
+      "ما ابغا "+district,
+      "ما ابغى "+district,
+      "ما عايز "+district,
+      "استبعد "+district,
+      "بدون "+district
+    ];
 
-     const negative=[
-      "مو "+k,
-      "مش "+k,
-      "غير "+k,
-      "ما ابي "+k,
-      "ما ابغا "+k,
-      "ما عايز "+k
-     ];
+    const excluded=negatives.some(x=>text.includes(x));
 
-     if(negative.some(x=>t.includes(x))){
+    if(excluded){
 
-       unique(M.excluded,value);
-       M.locations=M.locations.filter(x=>x!==value);
+      uniquePush(state.excludedDistricts,display);
+      state.districts=removeValue(state.districts,display);
 
-     }else{
-       unique(M.locations,value);
-     }
-   }
- });
+    }else{
 
+      if(!state.excludedDistricts.includes(display)){
+        uniquePush(state.districts,display);
+      }
+    }
+  }
 
- /* ROOMS */
+  /* bedrooms */
 
- let rooms=t.match(
- /(\d+)\s*(?:غرف|غرفه|bedroom|bedrooms|bed|beds)/
- );
+  let roomMatch=text.match(
+    /(\d+)\s*(?:غرف|غرفه|غرف نوم|bed|beds|bedroom|bedrooms)/
+  );
 
- if(rooms){
+  if(roomMatch){
 
-   M.rooms=parseInt(rooms[1]);
+    state.rooms=Number(roomMatch[1]);
+    state.roomsFlexible=false;
 
-   if(any(t,[
-    "على الاقل","اقل شي","اقل شيء",
-    "ما يقل","او اكثر","واكثر","فوق"
-   ])){
-     M.roomsMode="min";
-   }else{
-     M.roomsMode="exact";
-   }
- }
+    state.roomsMode=
+      has(text,[
+        "على الاقل","اقل شي","اقل شيء",
+        "او اكثر","فاكثر","واكثر","ما يقل"
+      ])
+      ? "min"
+      : "exact";
+  }else{
 
+    for(const [word,num] of NUMBER_WORDS){
 
- /* BUDGET RANGE */
+      const roomRegex=
+        new RegExp(
+          escapeRegExp(word)+"\\s+(?:غرف|غرفه)"
+        );
 
- let range=t.match(
- /(?:من\s*)?(\d+(?:\.\d+)?)\s*(الف|مليون|k)?\s*(?:الى|الي|-)\s*(\d+(?:\.\d+)?)\s*(الف|مليون|k)?/
- );
+      if(roomRegex.test(text)){
 
- if(range){
+        state.rooms=num;
+        state.roomsFlexible=false;
 
-   const u1=range[2]||range[4]||"";
-   const u2=range[4]||range[2]||"";
+        state.roomsMode=
+          has(text,["على الاقل","او اكثر","فاكثر"])
+          ? "min"
+          : "exact";
 
-   M.budgetMin=money(range[1],u1);
-   M.budgetMax=money(range[3],u2);
-   M.budgetApprox=null;
- }
+        break;
+      }
+    }
+  }
 
+  /* bathrooms */
 
- /* MAX */
+  let bath=text.match(
+    /(\d+)\s*(?:حمام|حمامات|دورات مياه|دوره مياه)/
+  );
 
- let maximum=t.match(
- /(?:ما\s*(?:ابي|ابغا|عايز|بدي)?\s*(?:اتعدى|اتجاوز)|حدي|حد اقصى|اقصى ميزانيه|حتى|لحد)\s*(\d+(?:\.\d+)?)\s*(الف|مليون|k)?/
- );
+  if(bath){
+    state.bathrooms=Number(bath[1]);
+  }
 
- if(maximum){
-   M.budgetMax=money(maximum[1],maximum[2]||"");
-   M.budgetApprox=null;
- }
+  /* budget */
 
+  parseBudget(text,false);
 
- /* APPROX */
+  /* area range */
 
- let approximate=t.match(
- /(?:حول|حوالي|تقريبا|بحدود|ميزانيتي|ميزانيه)\s*(\d+(?:\.\d+)?)\s*(الف|مليون|k)?/
- );
+  let areaRange=text.match(
+    /(?:مساحه|المساحه)?\s*(?:من\s*)?(\d+)\s*(?:متر|م2|م²)?\s*(?:الى|الي|-)\s*(\d+)\s*(?:متر|م2|م²)/
+  );
 
- if(approximate){
-   M.budgetApprox=money(
-     approximate[1],
-     approximate[2]||""
-   );
- }
+  if(areaRange){
+    state.areaMin=Number(areaRange[1]);
+    state.areaMax=Number(areaRange[2]);
+  }
 
+  let areaMin=text.match(
+    /(?:مساحه|المساحه)?\s*(?:فوق|اكثر من|على الاقل|اقل شي)\s*(\d+)\s*(?:متر|م2|م²)/
+  );
 
- if(any(t,["نص مليون","نصف مليون"])){
-   M.budgetApprox=500000;
- }
+  if(areaMin){
+    state.areaMin=Number(areaMin[1]);
+  }
 
+  let areaMax=text.match(
+    /(?:مساحه|المساحه)?\s*(?:اقل من|تحت|حد اقصى)\s*(\d+)\s*(?:متر|م2|م²)/
+  );
 
- /* AREA */
+  if(areaMax){
+    state.areaMax=Number(areaMax[1]);
+  }
 
- let amin=t.match(
- /(?:مساحه\s*)?(?:فوق|اكثر من|على الاقل|اقل شي)\s*(\d+)\s*(?:متر|م2|م²)/
- );
+  let exactArea=text.match(
+    /(?:مساحه|المساحه)\s*(?:حول|حوالي|تقريبا)?\s*(\d+)\s*(?:متر|م2|م²)/
+  );
 
- if(amin)M.areaMin=parseInt(amin[1]);
+  if(exactArea && !state.areaMin && !state.areaMax){
+    state.areaMin=Number(exactArea[1]);
+  }
 
- let amax=t.match(
- /(?:مساحه\s*)?(?:تحت|اقل من|حد اقصى)\s*(\d+)\s*(?:متر|م2|م²)/
- );
+  /* features */
 
- if(amax)M.areaMax=parseInt(amax[1]);
+  const featureMap=[
+    [["مسبح","pool"],"مسبح"],
+    [["حديقه","garden"],"حديقة"],
+    [["بلكونه","شرفه","balcony"],"بلكونة"],
+    [["مدخل خاص"],"مدخل خاص"],
+    [["موقف خاص","موقف سياره","باركنج","parking"],"موقف"],
+    [["مصعد","elevator"],"مصعد"],
+    [["غرفه خادمه","خادمه"],"غرفة خادمة"],
+    [["غرفه سائق","سائق"],"غرفة سائق"],
+    [["اطلاله بحر","اطلالة بحر","بحر مباشر","sea view"],"إطلالة بحر"],
+    [["قريب من البحر","جنب البحر"],"قريب من البحر"],
+    [["دور عالي","دور مرتفع","مو دور واطي","مش دور واطي"],"دور مرتفع"],
+    [["دور ارضي","ارضي"],"دور أرضي"],
+    [["تراس","terrace"],"تراس"],
+    [["مؤثث","مفروش","furnished"],"مؤثث"],
+    [["غير مؤثث","غير مفروش"],"غير مؤثث"],
+    [["جديد","جديده","جديدة"],"جديد"]
+  ];
 
+  for(const [words,value] of featureMap){
 
- /* FEATURES */
+    if(has(text,words)){
 
- const FEATURES=[
-  [["مسبح","pool"],"مسبح"],
-  [["حديقه","garden"],"حديقة"],
-  [["بلكونه","شرفه","balcony"],"بلكونة"],
-  [["مدخل خاص"],"مدخل خاص"],
-  [["موقف خاص","باركنج","parking"],"موقف خاص"],
-  [["مصعد","elevator"],"مصعد"],
-  [["غرفه خادمه","خادمه"],"غرفة خادمة"],
-  [["اطلاله بحر","بحر مباشر","sea view"],"إطلالة بحر"],
-  [["قريب من البحر","جنب البحر"],"قريب من البحر"],
-  [["دور عالي","دور مرتفع","مو دور واطي","مش دور واطي"],"دور مرتفع"],
-  [["دور ارضي","ارضي"],"دور أرضي"],
-  [["جديد","جديده"],"جديد"]
- ];
+      if(
+        value==="مؤثث" &&
+        has(text,["غير مؤثث","غير مفروش"])
+      ) continue;
 
- FEATURES.forEach(([words,value])=>{
-   if(any(t,words))unique(M.features,value);
- });
+      uniquePush(state.features,value);
+    }
+  }
 
+  /* broader locations */
 
- /* FINANCE */
+  if(has(text,["شمال جده","شمال جدة"])){
+    uniquePush(state.features,"شمال جدة");
+  }
 
- if(any(t,["كاش","نقدي"]))unique(M.notes,"كاش");
+  if(has(text,["جنوب جده","جنوب جدة"])){
+    uniquePush(state.features,"جنوب جدة");
+  }
 
- if(any(t,["تمويل","تمويل عقاري","بنك"]))
-   unique(M.notes,"تمويل عقاري");
+  /* finance */
 
- if(any(t,["دعم سكني","مدعوم"]))
-   unique(M.notes,"دعم سكني");
+  if(has(text,["كاش","نقدي"])){
+    uniquePush(state.notes,"كاش");
+  }
 
+  if(has(text,["تمويل","تمويل عقاري","عن طريق البنك"])){
+    uniquePush(state.notes,"تمويل عقاري");
+  }
 
- calculateConfidence();
+  if(has(text,["دعم سكني","مدعوم","سكني"])){
+    uniquePush(state.notes,"دعم سكني");
+  }
+
+  calculateConfidence();
 }
 
+/* ===================== CORRECTIONS ===================== */
 
-/* ================================
-   CONFIDENCE
-================================ */
+function detectCorrections(raw){
+
+  const text=applyLearning(normalizeArabic(raw));
+
+  /*
+    أحدث قيمة صريحة تعتبر تحديثًا.
+    مثال: "لا خليها 4 غرف بدل 3"
+  */
+
+  if(has(text,[
+    "خليها","خليه","بدل","قصدي",
+    "غيرها","غيره","لا "
+  ])){
+    state.lastIntent="correction";
+  }else{
+    state.lastIntent="normal";
+  }
+}
+
+/* ===================== CONFIDENCE ===================== */
 
 function calculateConfidence(){
 
- let score=0;
+  let score=0;
 
- if(M.city)score+=20;
- if(M.purpose)score+=20;
- if(M.type)score+=20;
+  if(state.city) score+=20;
+  if(state.purpose) score+=20;
+  if(state.type) score+=20;
 
- if(M.rooms || ["أرض","عمارة"].includes(M.type))
-   score+=15;
+  if(
+    state.rooms ||
+    state.roomsFlexible ||
+    ["أرض","عمارة"].includes(state.type)
+  ) score+=15;
 
- if(M.budgetApprox||M.budgetMax||M.budgetMin)
-   score+=15;
+  if(
+    state.budgetApprox ||
+    state.budgetMin ||
+    state.budgetMax ||
+    state.budgetFlexible
+  ) score+=15;
 
- if(M.locations.length||M.notes.includes("الموقع مرن"))
-   score+=10;
+  if(
+    state.districts.length ||
+    state.locationFlexible ||
+    state.features.includes("شمال جدة") ||
+    state.features.includes("جنوب جدة")
+  ) score+=10;
 
- M.confidence=Math.min(score,100);
+  state.confidence=Math.min(score,100);
 }
 
-
-/* ================================
-   QUESTIONS
-================================ */
+/* ===================== NEXT QUESTION ===================== */
 
 function nextQuestion(){
 
- if(!M.city){
-   M.awaiting="city";
-   return "تمام، في أي مدينة تبحث؟";
- }
+  if(!state.city){
+    state.awaiting="city";
+    return "تمام. في أي مدينة تدور؟";
+  }
 
- if(!M.purpose){
-   M.awaiting="purpose";
-   return "تبحث عن شراء وتمليك، أو إيجار؟";
- }
+  if(!state.purpose){
+    state.awaiting="purpose";
+    return "تمام. تبغاه تمليك ولا إيجار؟";
+  }
 
- if(!M.type){
-   M.awaiting="type";
-   return "وش نوع العقار اللي يناسبك؟ شقة، فيلا، دور، دوبلكس، أرض...؟";
- }
+  if(!state.type){
+    state.awaiting="type";
+    return "وش نوع العقار اللي تدور عليه؟ شقة، فيلا، دور، دوبلكس، أرض...؟";
+  }
 
- if(!M.rooms&&!["أرض","عمارة"].includes(M.type)){
-   M.awaiting="rooms";
-   return "كم غرفة تحتاج؟ وإذا عندك حد أدنى قل لي مثلاً: 4 غرف فأكثر.";
- }
+  if(
+    !state.rooms &&
+    !state.roomsFlexible &&
+    !["أرض","عمارة"].includes(state.type)
+  ){
+    state.awaiting="rooms";
+    return "كم غرفة تحتاج؟";
+  }
 
- if(!M.budgetApprox&&!M.budgetMax&&!M.budgetMin){
-   M.awaiting="budget";
-   return "كم حدود الميزانية؟ حتى لو تقريبية.";
- }
+  if(
+    !state.budgetApprox &&
+    !state.budgetMin &&
+    !state.budgetMax &&
+    !state.budgetFlexible
+  ){
+    state.awaiting="budget";
+    return "وكم حدود الميزانية تقريبًا؟";
+  }
 
- if(!M.locations.length&&!M.notes.includes("الموقع مرن")){
-   M.awaiting="location";
-   return "في حي معين تفضله؟ تقدر تعطيني أكثر من حي، أو تقول «ما يفرق».";
- }
+  if(
+    !state.districts.length &&
+    !state.locationFlexible &&
+    !state.features.includes("شمال جدة") &&
+    !state.features.includes("جنوب جدة")
+  ){
+    state.awaiting="district";
+    return "في أحياء معينة تفضلها؟ وإذا ما يفرق معك قل لي «أي حي».";
+  }
 
- M.awaiting=null;
- return null;
+  state.awaiting=null;
+  return null;
 }
 
+/* ===================== NATURAL RESPONSE ===================== */
 
-/* ================================
-   SHORT FOLLOW-UP ANSWERS
-================================ */
+function buildResponse(){
 
-function followUp(raw){
+  const question=nextQuestion();
 
- const t=applyLearning(norm(raw));
+  if(question) return question;
 
- if(M.awaiting==="rooms"){
+  let response="تمام، كذا الصورة عندي واضحة.";
 
-   const n=t.match(/\d+/);
+  if(state.excludedDistricts.length){
+    response+="\nوبستبعد "+state.excludedDistricts.join("، ")+".";
+  }
 
-   if(n){
-     M.rooms=parseInt(n[0]);
-     M.roomsMode=
-       any(t,["اقل شي","على الاقل","او اكثر","فوق"])
-       ?"min":"exact";
-   }
- }
+  response+="\n\nتقدر تضيف أو تغيّر أي شرط قبل البحث، أو اضغط «ابدأ البحث».";
 
- if(M.awaiting==="budget"){
-
-   const n=t.match(/(\d+(?:\.\d+)?)\s*(الف|مليون|k)?/);
-
-   if(n)M.budgetApprox=money(n[1],n[2]||"");
- }
-
- if(M.awaiting==="location" &&
-    any(t,["ما يفرق","مايفرق","اي حي","اي مكان","مو مهم","مش مهم"])){
-
-   unique(M.notes,"الموقع مرن");
- }
-
- calculateConfidence();
+  return response;
 }
 
+/* ===================== DISPLAY ===================== */
 
-/* ================================
-   RESPONSE
-================================ */
+function formatMoney(n){
 
-function response(){
+  if(!n) return "—";
 
- const q=nextQuestion();
-
- if(q)return q;
-
- let r="ممتاز. كذا فهمت طلبك بشكل كافي للبحث.";
-
- if(M.excluded.length)
-   r+="\nالمناطق المستبعدة: "+M.excluded.join("، ")+".";
-
- r+="\n\nإذا حاب تعدّل شيء، قل لي مباشرة. مثال: «لا، خليها 5 غرف» أو «ارفع الميزانية لمليون».";
-
- return r;
+  return new Intl.NumberFormat("en-US",{
+    maximumFractionDigits:0
+  }).format(n)+" ريال";
 }
 
+function budgetText(){
 
-/* ================================
-   UI
-================================ */
+  if(state.budgetFlexible) return "مرنة";
 
-function message(text,who){
+  if(state.budgetMin && state.budgetMax){
+    return formatMoney(state.budgetMin)+" – "+formatMoney(state.budgetMax);
+  }
 
- const chat=document.getElementById("chat");
+  if(state.budgetMax){
+    return "حتى "+formatMoney(state.budgetMax);
+  }
 
- const row=document.createElement("div");
- row.className="msg "+who;
+  if(state.budgetMin){
+    return "من "+formatMoney(state.budgetMin);
+  }
 
- const bubble=document.createElement("div");
- bubble.className="bubble";
- bubble.textContent=text;
+  if(state.budgetApprox){
+    return "حوالي "+formatMoney(state.budgetApprox);
+  }
 
- row.appendChild(bubble);
- chat.appendChild(row);
-
- chat.scrollTop=chat.scrollHeight;
+  return "—";
 }
 
+function areaText(){
 
-function send(){
+  if(state.areaMin && state.areaMax){
+    return state.areaMin+" – "+state.areaMax+" م²";
+  }
 
- const input=document.getElementById("input");
- const raw=input.value.trim();
+  if(state.areaMin){
+    return state.areaMin+" م² فأكثر";
+  }
 
- if(!raw)return;
+  if(state.areaMax){
+    return "حتى "+state.areaMax+" م²";
+  }
 
- message(raw,"user");
- input.value="";
+  return "—";
+}
 
+function roomText(){
 
- /* Does user teach the agent? */
+  if(state.roomsFlexible) return "مرن";
 
- const teaching=detectTeaching(raw);
+  if(!state.rooms) return "—";
 
- if(teaching.learned){
+  return state.rooms+
+    (state.roomsMode==="min" ? " فأكثر" : "");
+}
 
-   message(
-    `تمام، تعلمت أن «${teaching.alias}» تقصد بها «${teaching.meaning}».`,
+function locationText(){
+
+  let parts=[];
+
+  if(state.districts.length){
+    parts.push(state.districts.join("، "));
+  }
+
+  if(state.locationFlexible){
+    parts.push("أي حي");
+  }
+
+  if(state.excludedDistricts.length){
+    parts.push("باستثناء "+state.excludedDistricts.join("، "));
+  }
+
+  return parts.join(" | ") || "—";
+}
+
+function updateUI(){
+
+  calculateConfidence();
+
+  document.getElementById("vPurpose").textContent=
+    state.purpose||"—";
+
+  document.getElementById("vType").textContent=
+    state.type||"—";
+
+  document.getElementById("vCity").textContent=
+    state.city||"—";
+
+  document.getElementById("vDistricts").textContent=
+    locationText();
+
+  document.getElementById("vRooms").textContent=
+    roomText();
+
+  document.getElementById("vBudget").textContent=
+    budgetText();
+
+  document.getElementById("vArea").textContent=
+    areaText();
+
+  const extras=[
+    ...state.features,
+    ...state.notes
+  ];
+
+  if(state.bathrooms){
+    extras.push(state.bathrooms+" حمام");
+  }
+
+  document.getElementById("vFeatures").textContent=
+    extras.length ? extras.join("، ") : "—";
+
+  document.getElementById("completion").textContent=
+    state.confidence+"% مكتمل";
+
+  const ready=!nextQuestion();
+
+  document.getElementById("searchBtn").style.display=
+    ready ? "block" : "none";
+
+  updateDev();
+
+  save();
+}
+
+/* ===================== CHAT ===================== */
+
+function addMessage(text,who){
+
+  const chat=document.getElementById("chat");
+
+  const row=document.createElement("div");
+  row.className="row "+who;
+
+  const bubble=document.createElement("div");
+  bubble.className="bubble";
+  bubble.textContent=text;
+
+  row.appendChild(bubble);
+  chat.appendChild(row);
+
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function sendMessage(){
+
+  const input=document.getElementById("input");
+  const raw=input.value.trim();
+
+  if(!raw) return;
+
+  addMessage(raw,"user");
+  input.value="";
+
+  const teaching=detectTeaching(raw);
+
+  if(teaching){
+
+    addMessage(
+      `تمام. تعلمت أن «${teaching.alias}» تعني «${teaching.meaning}».`,
+      "agent"
+    );
+
+    updateUI();
+    return;
+  }
+
+  detectCorrections(raw);
+
+  /*
+    أولاً نفهم الرد بناءً على السؤال السابق.
+    بعدها نحلل الرسالة كاملة لاستخراج أي معلومات إضافية.
+  */
+
+  parseAwaiting(raw);
+  understand(raw);
+
+  const answer=buildResponse();
+
+  updateUI();
+
+  setTimeout(()=>{
+    addMessage(answer,"agent");
+    updateUI();
+  },120);
+}
+
+/* ===================== SEARCH ===================== */
+
+function prepareSearch(){
+
+  let summary="تمام. هذا طلب البحث النهائي عندي:\n\n";
+
+  summary+="العملية: "+(state.purpose||"غير محدد")+"\n";
+  summary+="العقار: "+(state.type||"غير محدد")+"\n";
+  summary+="المدينة: "+(state.city||"غير محدد")+"\n";
+  summary+="الأحياء: "+locationText()+"\n";
+  summary+="الغرف: "+roomText()+"\n";
+  summary+="الميزانية: "+budgetText()+"\n";
+  summary+="المساحة: "+areaText();
+
+  if(state.features.length){
+    summary+="\nالمميزات: "+state.features.join("، ");
+  }
+
+  if(state.notes.length){
+    summary+="\nملاحظات: "+state.notes.join("، ");
+  }
+
+  addMessage(summary,"agent");
+
+  addMessage(
+    "الطلب جاهز للبحث. الخطوة التالية هي ربط هذه المواصفات بمصدر العقارات الفعلي، بدون فقدان أي شرط من المحادثة.",
     "agent"
-   );
-
-   update();
-   return;
- }
-
-
- /* Normal conversation */
-
- followUp(raw);
- understand(raw);
- update();
-
- setTimeout(()=>{
-   message(response(),"agent");
-   update();
- },180);
+  );
 }
 
+/* ===================== DEVELOPER MODE ===================== */
 
-/* ================================
-   SUMMARY
-================================ */
+let devOpen=false;
 
-function update(){
+function toggleDev(){
 
- calculateConfidence();
+  devOpen=!devOpen;
 
- document.getElementById("purpose").textContent=M.purpose||"—";
- document.getElementById("type").textContent=M.type||"—";
- document.getElementById("city").textContent=M.city||"—";
+  document.getElementById("dev").style.display=
+    devOpen ? "block" : "none";
 
- document.getElementById("location").textContent=
-   M.locations.length?M.locations.join("، "):
-   M.notes.includes("الموقع مرن")?"مرن":"—";
-
- document.getElementById("rooms").textContent=
-   M.rooms
-   ? M.rooms+(M.roomsMode==="min"?" فأكثر":"")
-   :"—";
-
-
- let b="—";
-
- if(M.budgetMin&&M.budgetMax)
-   b=formatMoney(M.budgetMin)+" - "+formatMoney(M.budgetMax);
-
- else if(M.budgetMax)
-   b="حتى "+formatMoney(M.budgetMax);
-
- else if(M.budgetApprox)
-   b="حوالي "+formatMoney(M.budgetApprox);
-
- document.getElementById("budget").textContent=b;
-
-
- let a="—";
-
- if(M.areaMin)a=M.areaMin+" م² فأكثر";
- if(M.areaMax)a="حتى "+M.areaMax+" م²";
-
- document.getElementById("area").textContent=a;
-
-
- document.getElementById("features").textContent=
-   [...M.features,...M.notes].join("، ")||"—";
-
-
- document.getElementById("confidence").textContent=
-   "درجة اكتمال طلب العميل: "+M.confidence+"%";
-
-
- document.getElementById("search").style.display=
-   nextQuestion() ? "none":"block";
+  updateDev();
 }
 
+function updateDev(){
 
-/* ================================
-   SEARCH READY
-================================ */
+  const box=document.getElementById("dev");
 
-function readySearch(){
+  if(!box) return;
 
- let text="طلب البحث جاهز:\n\n";
-
- text+="• "+M.purpose+" "+M.type+"\n";
- text+="• "+M.city+"\n";
-
- if(M.locations.length)
-   text+="• "+M.locations.join(" أو ")+"\n";
-
- if(M.rooms)
-   text+="• "+M.rooms+
-   (M.roomsMode==="min"?" غرف فأكثر":" غرف")+"\n";
-
- if(M.budgetMax)
-   text+="• حتى "+formatMoney(M.budgetMax)+"\n";
-
- else if(M.budgetApprox)
-   text+="• حوالي "+formatMoney(M.budgetApprox)+"\n";
-
- if(M.features.length)
-   text+="• "+M.features.join("، ")+"\n";
-
- message(text,"agent");
-
- message(
-   "المواصفات أصبحت جاهزة. المرحلة التالية هي توصيل هذا الطلب بمحرك نتائج العقارات.",
-   "agent"
- );
+  box.textContent=
+    "AGENT STATE\n\n"+
+    JSON.stringify(state,null,2)+
+    "\n\nLEARNED ALIASES\n\n"+
+    JSON.stringify(learned.aliases||{},null,2);
 }
 
+/* ===================== RESET ===================== */
 
-/* ================================
-   RESET
-================================ */
+function newSearch(){
 
-function resetConversation(){
+  state=emptyState();
 
- M=blank();
+  localStorage.removeItem(SESSION_KEY);
 
- document.getElementById("chat").innerHTML="";
+  document.getElementById("chat").innerHTML="";
 
- message(
-  "هلا! أنا مستشارك العقاري.\nقل لي بطريقتك وش العقار اللي تدور عليه، وأنا أسألك عن الأشياء الناقصة.",
-  "agent"
- );
+  addMessage(
+    "هلا! أنا مستشارك العقاري.\n\nقل لي وش تدور عليه بطريقتك، حتى لو الطلب ناقص. بسألك عن الأشياء اللي أحتاجها وحدة وحدة.",
+    "agent"
+  );
 
- update();
+  updateUI();
+
+  document.getElementById("input").focus();
 }
 
+/* ===================== KEYBOARD ===================== */
 
-/* ENTER */
+document.getElementById("input")
+.addEventListener("keydown",function(e){
 
-document.getElementById("input").addEventListener("keydown",e=>{
- if(e.key==="Enter")send();
+  if(e.key==="Enter"){
+    e.preventDefault();
+    sendMessage();
+  }
 });
 
+/* ===================== START ===================== */
 
-resetConversation();
+if(
+  !state ||
+  typeof state!=="object" ||
+  !Array.isArray(state.districts)
+){
+  state=emptyState();
+}
+
+addMessage(
+  "هلا! أنا مستشارك العقاري.\n\nقل لي وش العقار اللي تدور عليه، وأنا بكمل معك الطلب خطوة بخطوة.",
+  "agent"
+);
+
+updateUI();
 
 </script>
+
 </body>
 </html>
